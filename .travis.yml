@@ -24,3 +24,4 @@ notifications:
 # Вставляем ключ, полученный с codecov.io
 env:
   global:
+    - CODECOV_TOKEN="071066cb-3f60-474f-abed-55ae57065753"
