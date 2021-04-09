@@ -109,6 +109,12 @@ public class AlertRabbit {
             scheduler.shutdown();
         } catch (SchedulerException | InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
