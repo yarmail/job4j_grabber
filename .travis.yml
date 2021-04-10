@@ -7,6 +7,13 @@ jdk: oraclejdk14
 # используем режим обычного пользователя для сборки проекта.
 # sudo: false
 
+# подключаем postgresql
+services:
+  - postgresql
+
+before_install:
+  - psql -c 'create database grabber;' -U postgres
+
 # после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo
 
 # Здесь используется сторонний сервис https://codecov.io/
