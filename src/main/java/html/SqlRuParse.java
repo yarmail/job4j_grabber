@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
+ * Jsoup
  * https://www.sql.ru/forum/job-offers
  * Ячейка с именем имеет аттрибут class=postslisttopic.
  * jsoup может извлечь все элементы с этим аттрибутом.
