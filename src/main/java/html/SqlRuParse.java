@@ -18,6 +18,11 @@ import org.jsoup.select.Elements;
  *
  * System.out.println(href.attr("href"));
  * System.out.println(href.text());
+ *
+ * Пример получаемого вывода:
+ * https://www.sql.ru/forum/1334832/trebuetsya-analitik-1s-usloviya-v-soobshheniyah
+ * Требуется аналитик 1С. Условия в сообщениях :)
+ * 31 мар 21, 11:06
  */
 public class SqlRuParse {
     public static void main(String[] args) throws Exception {
