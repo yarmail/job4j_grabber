@@ -20,15 +20,16 @@ import java.time.format.DateTimeFormatterBuilder;
 
 public class DateTimeParserSqlRu implements DateTimeParser {
 
-    private static Locale rusLocale = new Locale("ru", "RU");
-
+    private static final Locale rusLocale = new Locale("ru", "RU");
+    private static final HashMap<String, String> map = new HashMap<String, String>();
+    private static DateTimeFormatter dtf;
 
     @Override
     public LocalDateTime parse(String dateString) {
         LocalDateTime result;
         String checkedString = checkString(dateString);
         String datePattern = "d MMMM yy, HH:mm";
-        DateTimeFormatter dtf = new DateTimeFormatterBuilder()
+        dtf = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
               //.parseLenient() - для нумерованных месяцев
                 .appendPattern(datePattern)
@@ -47,7 +48,7 @@ public class DateTimeParserSqlRu implements DateTimeParser {
         String result = "проверка строки не сработала";
         if (string.contains("сегодня")  | string.contains("вчера")) {
             String datePattern = "d MMMM yy";
-            DateTimeFormatter dtf = new DateTimeFormatterBuilder()
+            dtf = new DateTimeFormatterBuilder()
                     .appendPattern(datePattern)
                     .toFormatter(rusLocale);
             String today = LocalDate.now().format(dtf);
@@ -62,7 +63,6 @@ public class DateTimeParserSqlRu implements DateTimeParser {
             String[] arrayString = string.split(" ");
             String partString = arrayString[1];
 
-            var map = new HashMap<String, String>();
             map.put("янв", "января");
             map.put("фев", "февраля");
             map.put("мар", "марта");
