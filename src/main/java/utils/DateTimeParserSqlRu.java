@@ -20,8 +20,8 @@ import java.time.format.DateTimeFormatterBuilder;
 
 public class DateTimeParserSqlRu implements DateTimeParser {
 
-    private static final Locale rusLocale = new Locale("ru", "RU");
-    private static final HashMap<String, String> map = new HashMap<String, String>();
+    private static final Locale RUS_LOCALE = new Locale("ru", "RU");
+    private static final HashMap<String, String> MAP = new HashMap<String, String>();
     private static DateTimeFormatter dtf;
 
     @Override
@@ -33,7 +33,7 @@ public class DateTimeParserSqlRu implements DateTimeParser {
                 .parseCaseInsensitive()
               //.parseLenient() - для нумерованных месяцев
                 .appendPattern(datePattern)
-                .toFormatter(rusLocale);
+                .toFormatter(RUS_LOCALE);
         result = LocalDateTime.parse(checkedString, dtf);
         return result;
     }
@@ -50,7 +50,7 @@ public class DateTimeParserSqlRu implements DateTimeParser {
             String datePattern = "d MMMM yy";
             dtf = new DateTimeFormatterBuilder()
                     .appendPattern(datePattern)
-                    .toFormatter(rusLocale);
+                    .toFormatter(RUS_LOCALE);
             String today = LocalDate.now().format(dtf);
             String yesterday = LocalDate.now().minusDays(1).format(dtf);
             if (string.contains("сегодня")) {
@@ -63,21 +63,21 @@ public class DateTimeParserSqlRu implements DateTimeParser {
             String[] arrayString = string.split(" ");
             String partString = arrayString[1];
 
-            map.put("янв", "января");
-            map.put("фев", "февраля");
-            map.put("мар", "марта");
-            map.put("апр", "апреля");
-            map.put("июн", "июня");
-            map.put("июл", "июля");
-            map.put("авг", "августа");
-            map.put("сен", "сентября");
-            map.put("окт", "октября");
-            map.put("ноя", "ноября");
-            map.put("дек", "декабря");
+            MAP.put("янв", "января");
+            MAP.put("фев", "февраля");
+            MAP.put("мар", "марта");
+            MAP.put("апр", "апреля");
+            MAP.put("июн", "июня");
+            MAP.put("июл", "июля");
+            MAP.put("авг", "августа");
+            MAP.put("сен", "сентября");
+            MAP.put("окт", "октября");
+            MAP.put("ноя", "ноября");
+            MAP.put("дек", "декабря");
 
-            for (String key: map.keySet()) {
+            for (String key: MAP.keySet()) {
                 if (key.equals(partString)) {
-                    result = string.replace(partString, map.get(key));
+                    result = string.replace(partString, MAP.get(key));
                     break;
                 }
             }
