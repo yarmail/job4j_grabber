@@ -46,7 +46,7 @@ public class DateTimeParserSqlRu implements DateTimeParser {
      */
     private static String checkString(String string) {
         String result = "проверка строки не сработала";
-        if (string.contains("сегодня")  | string.contains("вчера")) {
+        if (string.contains("сегодня")  || string.contains("вчера")) {
             String datePattern = "d MMMM yy";
             dtf = new DateTimeFormatterBuilder()
                     .appendPattern(datePattern)
