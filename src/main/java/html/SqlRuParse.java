@@ -33,7 +33,7 @@ public class SqlRuParse {
 // чтобы он парсил первые 5 страниц.
 
     /** выбираем нужное количество страниц*/
-    private static int n = 5;
+    private static final int N = 5;
 
     /** начальная ссылка*/
     private static final String LINK =  "https://www.sql.ru/forum/job-offers/";
@@ -41,7 +41,7 @@ public class SqlRuParse {
     /** Работа со ссылкой и передача её в парсинг*/
     private static void cycle() throws IOException {
         String resultLink = "";
-        for (int i = 1; i <= n; i++) {
+        for (int i = 1; i <= N; i++) {
             if (i == 1) {
                 resultLink = LINK;
             }
