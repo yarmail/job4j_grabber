@@ -1,9 +1,9 @@
 package utils;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 
 import java.util.Locale;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -22,14 +22,34 @@ public class DateTimeParserSqlRu implements DateTimeParser {
 
     private static final Locale RUS_LOCALE = new Locale("ru", "RU");
     private static final HashMap<String, String> MAP = new HashMap<String, String>();
-    private static DateTimeFormatter dtf;
+
+
+    /** статический блок инициализации
+     * Также можно использовать анонимный класс
+     * private static final HashMap<String, String> MAP = new HashMap<String, String>() {
+     * put(...);
+     * put(...);
+     */
+    static  {
+        MAP.put("янв", "января");
+        MAP.put("фев", "февраля");
+        MAP.put("мар", "марта");
+        MAP.put("апр", "апреля");
+        MAP.put("июн", "июня");
+        MAP.put("июл", "июля");
+        MAP.put("авг", "августа");
+        MAP.put("сен", "сентября");
+        MAP.put("окт", "октября");
+        MAP.put("ноя", "ноября");
+        MAP.put("дек", "декабря");
+    }
 
     @Override
     public LocalDateTime parse(String dateString) {
         LocalDateTime result;
         String checkedString = checkString(dateString);
         String datePattern = "d MMMM yy, HH:mm";
-        dtf = new DateTimeFormatterBuilder()
+        final DateTimeFormatter dtf = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
               //.parseLenient() - для нумерованных месяцев
                 .appendPattern(datePattern)
@@ -48,7 +68,7 @@ public class DateTimeParserSqlRu implements DateTimeParser {
         String result = "проверка строки не сработала";
         if (string.contains("сегодня")  || string.contains("вчера")) {
             String datePattern = "d MMMM yy";
-            dtf = new DateTimeFormatterBuilder()
+            final DateTimeFormatter dtf = new DateTimeFormatterBuilder()
                     .appendPattern(datePattern)
                     .toFormatter(RUS_LOCALE);
             String today = LocalDate.now().format(dtf);
@@ -62,18 +82,6 @@ public class DateTimeParserSqlRu implements DateTimeParser {
         } else {
             String[] arrayString = string.split(" ");
             String partString = arrayString[1];
-
-            MAP.put("янв", "января");
-            MAP.put("фев", "февраля");
-            MAP.put("мар", "марта");
-            MAP.put("апр", "апреля");
-            MAP.put("июн", "июня");
-            MAP.put("июл", "июля");
-            MAP.put("авг", "августа");
-            MAP.put("сен", "сентября");
-            MAP.put("окт", "октября");
-            MAP.put("ноя", "ноября");
-            MAP.put("дек", "декабря");
 
             for (String key: MAP.keySet()) {
                 if (key.equals(partString)) {
