@@ -1,18 +1,18 @@
 package html;
 
+import java.time.LocalDateTime;
+
 public class Post {
     private String name; // название вакансии
-    private String link;
-    private String author;
-    private String message; // тело вакансии
-    private String createDate;
+    private String link; // ссылка на вакансию
+    private String text; // текст вакансии
+    private LocalDateTime created; //дата первого поста
 
-    public Post(String name, String link, String author, String message, String createDate) {
+    public Post(String name, String link, String text, LocalDateTime created) {
         this.name = name;
         this.link = link;
-        this.author = author;
-        this.message = message;
-        this.createDate = createDate;
+        this.text = text;
+        this.created = created;
     }
 
     public String getName() {
@@ -31,27 +31,19 @@ public class Post {
         this.link = link;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getText() {
+        return text;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getMessage() {
-        return message;
+    public LocalDateTime getCreated() {
+        return created;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 }
