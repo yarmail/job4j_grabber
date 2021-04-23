@@ -8,6 +8,9 @@ public class Post {
     private String text; // текст вакансии
     private LocalDateTime created; //дата первого поста
 
+    public Post() {
+    }
+
     public Post(String name, String link, String text, LocalDateTime created) {
         this.name = name;
         this.link = link;
@@ -45,5 +48,15 @@ public class Post {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{"
+                + "name='" + name + '\''
+                + ", link='" + link + '\''
+                + ", text='" + text + '\''
+                + ", created=" + created
+                + '}';
     }
 }
