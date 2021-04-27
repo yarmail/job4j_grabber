@@ -32,20 +32,21 @@ import utils.DateTimeParserSqlRu;
  * Требуется аналитик 1С. Условия в сообщениях :)
  * 31 мар 21, 11:06
  */
-public class ParseSqlRu {
+public class ParseSqlRu implements Parse {
 
     /** начальная ссылка*/
     private static final String LINK =  "https://www.sql.ru/forum/job-offers/";
     /** выбираем нужное количество страниц*/
     private static final int N = 1;
-    private static List posts = new ArrayList<>();
     private static DateTimeParserSqlRu dateTimeParserSqlRu = new DateTimeParserSqlRu();
 
     /**
      * Метод  берет начальную ссылку
      * и по ней углубляется на нужное количество страниц
+     * Данный метод работает только для конкретного сайта
+     * https://www.sql.ru/forum/job-offers/
      */
-    private static void cycle() throws IOException {
+    private void cycle() {
         String resultLink = "";
         for (int i = 1; i <= N; i++) {
             if (i == 1) {
@@ -54,41 +55,81 @@ public class ParseSqlRu {
             if (i != 1) {
                 resultLink = LINK + i;
             }
-            list(resultLink);
         }
-    }
-
-    /** парсинг страницы*/
-    private static void list(String link) throws IOException {
-        Document doc = Jsoup.connect(link).get();
-        Elements rows = doc.select(".postslisttopic");
-        for (Element row : rows) {
-            Post post = new Post();
-            Element href = row.child(0); //весь кусок
-            post.setLink((href.attr("href"))); //ссылка
-            post.setName(href.text()); //имя, название объявления
-            Element date = row.parent().child(5); //дата весь кусок
-            post.setCreated(dateTimeParserSqlRu.parse(date.text())); //дата создания
-            //теперь берем новую ссылку и по ней тянем тело
-            post.setText(detail(post.getLink()));
-            posts.add(post);
-        }
-        System.out.println(posts.size()); //для проверки
     }
 
     /**
-     * Загружаем последняюю деталь поста,
-     * а именно тело, текст по сылке поста,
-     * первое сообщение
+     * парсинг страницы
+     * Element href = row.child(0); весь кусок кода
+     * (href.attr("href")) - ссылка из него
+     * href.text()); имя, название объявления
+     * Element date = row.parent().child(5); //дата весь кусок
+     * post.setCreated(dateTimeParserSqlRu.parse(date.text())); //дата создания
+     * ---
+     * Чтобы взять текст ссылки парсим документ по ссылке
+     * Document linkDoc = Jsoup.connect(post.getLink()).get();
+     * Пример для парсинга:
+     * https://www.sql.ru/forum/job-offers/
+     *
      */
-    private static String detail(String link) throws IOException {
+    public List<Post>  list(String link) throws IOException {
+        List posts = new ArrayList<>();
         Document doc = Jsoup.connect(link).get();
-        Elements elements = doc.select(".msgBody");
-        String resultText = elements.get(1).text();
-        return resultText;
+        Elements rows = doc.select(".postslisttopic");
+        for (Element row : rows) {
+            var post = new Post();
+            Element href = row.child(0);
+            post.setLink((href.attr("href")));
+            post.setName(href.text());
+            Element date = row.parent().child(5);
+            post.setCreated(dateTimeParserSqlRu.parse(date.text()));
+            Document linkDoc = Jsoup.connect(post.getLink()).get();
+            Elements elements = linkDoc.select(".msgBody");
+            post.setText(elements.get(1).text());
+            posts.add(post);
+        }
+        return posts;
     }
 
+    /**
+     * Парсим первый пост по ссылке объявления
+     * Пример для парсинга:
+     * https://www.sql.ru/forum/1335680/arhitektor-programmnyh-produktov-v-startup
+     * ----
+     * Ссылка - входящий параметр
+     * ----
+     * Текст ссылки:
+     * Elements elements = doc.select(".msgBody");
+     * post.setText(elements.get(1).text());
+     * ----
+     * Название объявления
+     * elements = doc.select(".messageHeader");
+     * post.setName(elements.get(0).text());
+     * ----
+     * Дата
+     * Изначально дата приходит в виде
+     * вчера, 18:11&nbsp;&nbsp;&nbsp;&nbsp;[
+     * и её надо чистить перед использованием
+     *
+     */
+    public Post detail(String link) throws IOException {
+        var post = new Post();
+        post.setLink(link);
+        Document doc = Jsoup.connect(link).get();
+        Elements elements = doc.select(".msgBody");
+        post.setText(elements.get(1).text());
+        elements = doc.select(".messageHeader");
+        post.setName(elements.get(0).text());
+        elements = doc.select(".msgFooter");
+        String date = elements.get(0).childNode(0).toString().trim();
+        date = date.substring(0, date.indexOf("&"));
+        post.setCreated(dateTimeParserSqlRu.parse(date));
+        return post;
+    }
+
+    // проверка работы методов
     public static void main(String[] args) throws IOException {
-        cycle();
+        System.out.println(new ParseSqlRu()
+        .detail("https://www.sql.ru/forum/1335680/arhitektor-programmnyh-produktov-v-startup"));
     }
 }
