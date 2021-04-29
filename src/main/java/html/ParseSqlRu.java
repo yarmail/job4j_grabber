@@ -14,79 +14,50 @@ import utils.DateTimeParserSqlRu;
 
 
 /**
- * Jsoup
- * https://www.sql.ru/forum/job-offers
- * Ячейка с именем имеет аттрибут class=postslisttopic.
- * jsoup может извлечь все элементы с этим аттрибутом.
- * Elements rows = doc.select(".postslisttopic");
- *
- * Element href = row.child(0);
- * Нам нужен первый элемент. Это ссылка.
- * У нее мы получаем адрес и текст.
- *
- * System.out.println(href.attr("href"));
- * System.out.println(href.text());
- *
- * Пример получаемого вывода:
- * https://www.sql.ru/forum/1334832/trebuetsya-analitik-1s-usloviya-v-soobshheniyah
- * Требуется аналитик 1С. Условия в сообщениях :)
- * 31 мар 21, 11:06
+ * Пример работы с Jsoup
  */
 public class ParseSqlRu implements Parse {
 
     /** начальная ссылка*/
     private static final String LINK =  "https://www.sql.ru/forum/job-offers/";
-    /** выбираем нужное количество страниц*/
-    private static final int N = 1;
+    /** выбираем нужное количество страниц сайта - глубина обхода*/
+    private static final int N = 2;
     private static DateTimeParserSqlRu dateTimeParserSqlRu = new DateTimeParserSqlRu();
 
     /**
      * Метод  берет начальную ссылку
-     * и по ней углубляется на нужное количество страниц
-     * Данный метод работает только для конкретного сайта
+     * и возвращает список ссылок на нужное количество страниц
+     * Данный метод работает только для конкретного адреса
      * https://www.sql.ru/forum/job-offers/
      */
-    private void cycle() {
-        String resultLink = "";
+    private List<String> pageLinks() {
+        List<String> result = new ArrayList<>();
+        result.add(LINK);
         for (int i = 1; i <= N; i++) {
-            if (i == 1) {
-                resultLink = LINK;
-            }
             if (i != 1) {
-                resultLink = LINK + i;
+                result.add(LINK + i);
             }
         }
+        return result;
     }
 
     /**
      * парсинг страницы
-     * Element href = row.child(0); весь кусок кода
-     * (href.attr("href")) - ссылка из него
-     * href.text()); имя, название объявления
-     * Element date = row.parent().child(5); //дата весь кусок
-     * post.setCreated(dateTimeParserSqlRu.parse(date.text())); //дата создания
-     * ---
-     * Чтобы взять текст ссылки парсим документ по ссылке
-     * Document linkDoc = Jsoup.connect(post.getLink()).get();
-     * Пример для парсинга:
-     * https://www.sql.ru/forum/job-offers/
-     *
+     * Element part = element.child(0);// кусок кода
+     * String postLink = part.attr("href");// ссылка из него на пост
+     * posts.add(detail(postLink)); // загружаем детали поста
      */
-    public List<Post>  list(String link) throws IOException {
-        List posts = new ArrayList<>();
-        Document doc = Jsoup.connect(link).get();
-        Elements rows = doc.select(".postslisttopic");
-        for (Element row : rows) {
-            var post = new Post();
-            Element href = row.child(0);
-            post.setLink((href.attr("href")));
-            post.setName(href.text());
-            Element date = row.parent().child(5);
-            post.setCreated(dateTimeParserSqlRu.parse(date.text()));
-            Document linkDoc = Jsoup.connect(post.getLink()).get();
-            Elements elements = linkDoc.select(".msgBody");
-            post.setText(elements.get(1).text());
-            posts.add(post);
+    public List<Post> list(String link) throws IOException {
+        List<Post> posts = new ArrayList<>();
+        List<String> pageLinks = pageLinks();
+        for (int i = 0; i < pageLinks.size(); i++) {
+            Document doc = Jsoup.connect(pageLinks.get(i)).get();
+            Elements elements = doc.select(".postslisttopic");
+            for (Element element: elements) {
+                Element part = element.child(0);
+                String postLink = part.attr("href");
+                posts.add(detail(postLink));
+            }
         }
         return posts;
     }
@@ -125,11 +96,5 @@ public class ParseSqlRu implements Parse {
         date = date.substring(0, date.indexOf("&"));
         post.setCreated(dateTimeParserSqlRu.parse(date));
         return post;
-    }
-
-    // проверка работы методов
-    public static void main(String[] args) throws IOException {
-        System.out.println(new ParseSqlRu()
-        .detail("https://www.sql.ru/forum/1335680/arhitektor-programmnyh-produktov-v-startup"));
     }
 }
