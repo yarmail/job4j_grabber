@@ -1,9 +1,10 @@
-package quartz;
+package grabber;
 
 import java.io.InputStream;
 import java.util.Properties;
 import java.sql.*;
 import org.quartz.*;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
@@ -11,8 +12,15 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 
 /**
+ * Как я понимаю, это пример работы с quartz
  * Библиотека http://www.quartz-scheduler.org/.
  * позволяет делать действия с периодичностью.
+ * Как подключить
+ * <dependency>
+ *   <groupId>org.quartz-scheduler</groupId>
+ *       <artifactId>quartz</artifactId>
+ *       <version>2.3.2</version>
+ *   </dependency>
  */
 public class AlertRabbit {
 

@@ -1,4 +1,4 @@
-package html;
+package grabber;
 /**
  *
  * 2. Парсинг HTML страницы.

@@ -1,4 +1,4 @@
-package html;
+package grabber;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -10,10 +10,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-import utils.DateTimeParserSqlRu;
-
 
 /**
+ * Парсер sql.ru
  * Пример работы с Jsoup
  */
 public class ParseSqlRu implements Parse {

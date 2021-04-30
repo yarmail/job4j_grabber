@@ -1,12 +1,18 @@
-package html;
+package grabber;
 
 import java.time.LocalDateTime;
 
+/**
+ * name; // название вакансии
+ * link; // ссылка на вакансию
+ * text; // текст вакансии
+ * created; //дата первого поста
+ */
 public class Post {
-    private String name; // название вакансии
-    private String link; // ссылка на вакансию
-    private String text; // текст вакансии
-    private LocalDateTime created; //дата первого поста
+    private String name;
+    private String link;
+    private String text;
+    private LocalDateTime created;
 
     public Post() {
     }
