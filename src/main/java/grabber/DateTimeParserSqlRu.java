@@ -93,10 +93,12 @@ public class DateTimeParserSqlRu implements DateTimeParser {
         return result;
     }
 
-    // проверка работы парсера
+/*
+    //проверка работы парсера
     public static void main(String[] args) {
-        String dateString = "вчера, 14:23";
+        String dateString = "сегодня, 10:00";
         String dateString2 = "2 дек 19, 22:29";
         System.out.println(new DateTimeParserSqlRu().parse(dateString));
     }
+*/
 }
