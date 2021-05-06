@@ -46,11 +46,16 @@ public class ParseSqlRu implements Parse {
      * String postLink = part.attr("href");// ссылка из него на пост
      * posts.add(detail(postLink)); // загружаем детали поста
      */
-    public List<Post> list(String link) throws IOException {
+    public List<Post> list(String link) {
         List<Post> posts = new ArrayList<>();
         List<String> pageLinks = pageLinks();
         for (int i = 0; i < pageLinks.size(); i++) {
-            Document doc = Jsoup.connect(pageLinks.get(i)).get();
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(pageLinks.get(i)).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Elements elements = doc.select(".postslisttopic");
             for (Element element: elements) {
                 Element part = element.child(0);
@@ -82,10 +87,15 @@ public class ParseSqlRu implements Parse {
      * и её надо чистить перед использованием
      *
      */
-    public Post detail(String link) throws IOException {
+    public Post detail(String link) {
         var post = new Post();
         post.setLink(link);
-        Document doc = Jsoup.connect(link).get();
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(link).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Elements elements = doc.select(".msgBody");
         post.setText(elements.get(1).text());
         elements = doc.select(".messageHeader");

@@ -2,35 +2,26 @@ package grabber;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.InputStream;
 import java.util.Properties;
 import static java.lang.Integer.valueOf;
 
 public class StorePsql implements Store, AutoCloseable {
     private static Connection connection;
 
-    public StorePsql() {
-        initConnection();
-    }
-
-    private static void initConnection() {
-        try (InputStream in = StorePsql.class.getClassLoader()
-                .getResourceAsStream("grabber.properties")) {
-            Properties config = new Properties();
-            config.load(in);
+    public StorePsql(Properties config) {
+        try {
             Class.forName(config.getProperty("driver-class-name"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
             connection = DriverManager.getConnection(
                     config.getProperty("url"),
                     config.getProperty("username"),
-                    config.getProperty("password")
-            );
+                    config.getProperty("password"));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch (Exception e) {
-            throw new IllegalStateException(e);
-
-        }
-
-
     }
 
     /**
