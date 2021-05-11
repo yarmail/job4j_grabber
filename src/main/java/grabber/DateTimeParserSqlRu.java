@@ -35,6 +35,7 @@ public class DateTimeParserSqlRu implements DateTimeParser {
         MAP.put("фев", "февраля");
         MAP.put("мар", "марта");
         MAP.put("апр", "апреля");
+        MAP.put("май", "мая");
         MAP.put("июн", "июня");
         MAP.put("июл", "июля");
         MAP.put("авг", "августа");
@@ -83,11 +84,8 @@ public class DateTimeParserSqlRu implements DateTimeParser {
             String[] arrayString = string.split(" ");
             String partString = arrayString[1];
 
-            for (String key: MAP.keySet()) {
-                if (key.equals(partString)) {
-                    result = string.replace(partString, MAP.get(key));
-                    break;
-                }
+            if (MAP.containsKey(partString)) {
+                result = string.replace(partString, MAP.get(partString));
             }
         }
         return result;

@@ -58,7 +58,7 @@ public class Grabber implements Grab {
         @Override
         public void execute(JobExecutionContext context) {
             JobDataMap map = context.getJobDetail().getJobDataMap();
-            Store store = (Store) map.get("Store");
+            Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
             List<Post> posts = parse.list("https://www.sql.ru/forum/job-offers/");
             posts.forEach(store::save);
