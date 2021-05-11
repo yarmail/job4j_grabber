@@ -56,6 +56,7 @@ public class StorePsql implements Store, AutoCloseable {
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 list.add(new Post(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("text"),
                         rs.getString("link"),
@@ -76,6 +77,7 @@ public class StorePsql implements Store, AutoCloseable {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 post = new Post(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("text"),
                         rs.getString("link"),

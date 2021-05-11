@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
  * created; //дата первого поста
  */
 public class Post {
+    private int id;
     private String name;
     private String link;
     private String text;
@@ -17,11 +18,20 @@ public class Post {
     public Post() {
     }
 
-    public Post(String name, String link, String text, LocalDateTime created) {
+    public Post(int id, String name, String link, String text, LocalDateTime created) {
+        this.id = id;
         this.name = name;
         this.link = link;
         this.text = text;
         this.created = created;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -59,10 +69,11 @@ public class Post {
     @Override
     public String toString() {
         return "Post{"
-                + "name = '" + name + '\''
-                + ", link = '" + link + '\''
-                + ", text = '" + text + '\''
-                + ", created = " + created
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", link='" + link + '\''
+                + ", text='" + text + '\''
+                + ", created=" + created
                 + '}';
     }
 }
