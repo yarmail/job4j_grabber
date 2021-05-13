@@ -29,10 +29,11 @@ public class StorePsql implements Store, AutoCloseable {
      * В таблице post у нас 5 столбцов
      * id(заполняется автоматически), name, text, link, created
      * Поле created в модели LocalDateTime, а в таблице Timestamp
+     * on conflict do nothing - ничего не делать, если есть конфликты
      */
     @Override
     public void save(Post post) {
-        String query = "insert into post(name, text, link, created) values (?, ?, ?, ?)";
+        String query = "insert into post(name, text, link, created) values (?, ?, ?, ?) on conflict do nothing";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getText());
