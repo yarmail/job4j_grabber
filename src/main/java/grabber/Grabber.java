@@ -71,6 +71,10 @@ public class Grabber implements Grab {
     /**
      * сервер EchoServer
      * возможность получить данные через браузер от граббера
+     * Пример запроса через браузер: 127.0.0.1:9000
+     * по дефолту Postgres выставляет кодировку винды, а значит Windows-1251
+     * => out.write(post.toString().getBytes("Windows-1251"));
+     *
      */
     public void web(Store store) {
         new Thread(() -> {
@@ -78,10 +82,10 @@ public class Grabber implements Grab {
                 while (!server.isClosed()) {
                     Socket socket = server.accept();
                     try (OutputStream out = socket.getOutputStream()) {
-                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes("Windows-1251"));
                         for (Post post : store.getAll()) {
-                            out.write(post.toString().getBytes());
-                            out.write(System.lineSeparator().getBytes());
+                            out.write(post.toString().getBytes("Windows-1251"));
+                            out.write(System.lineSeparator().getBytes("Windows-1251"));
                         }
                     } catch (IOException io) {
                         io.printStackTrace();
